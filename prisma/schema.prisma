@@ -16,7 +16,7 @@ model User {
   password String
   username String  @unique
   name     String
-  isAdmin  Boolean @default(false)
+  is_admin  Boolean @default(false)
   songs    Song[]
 }
 

@@ -13,7 +13,7 @@ app.get('/', async (req:Request, res: Response) => {
     res.json({ message: 'Hello World' })
 })
 
-app.use('/user', UserRouter)
+app.use('/', UserRouter)
 
 app.listen(port, () => {
     console.log(`Binotify REST app listening at http://localhost:${port}`)
