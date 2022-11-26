@@ -2,7 +2,7 @@ import { Expose } from 'class-transformer'
 import { IsDefined } from 'class-validator';
 
 
-export class CreateUserDto {
+export class registerDto {
     @IsDefined()
     @Expose()
     name: string;
@@ -11,6 +11,16 @@ export class CreateUserDto {
     @Expose()
     email: string;
 
+    @IsDefined()
+    @Expose()
+    username: string;
+
+    @IsDefined()
+    @Expose()
+    password: string;
+}
+
+export class loginDto {
     @IsDefined()
     @Expose()
     username: string;
