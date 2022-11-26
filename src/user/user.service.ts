@@ -53,6 +53,19 @@ export async function getUserByUsernameEmailService(username: string, email: str
 //     return await prisma.user.findMany()
 // }
 
+export async function getAllSingerService(){
+    return await prisma.user.findMany({
+        where: {
+            is_admin: false
+        },
+        select: {
+            user_id: true,
+            name: true,
+            image_path: true
+        }
+    })
+}
+
 export async function createUserService(register_body: registerDto) {
     try {
        return prisma.user.create({

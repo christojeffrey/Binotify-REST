@@ -1,4 +1,4 @@
-import { createUserService,  getUserByUsernameService, getUserByUsernameEmailService } from './user.service';
+import { createUserService,  getUserByUsernameService, getUserByUsernameEmailService, getAllSingerService } from './user.service';
 import { Request, Response } from 'express';
 import { registerDto, loginDto } from './user.dto';
 import { plainToClass } from 'class-transformer';
@@ -6,11 +6,12 @@ import { validate } from 'class-validator';
 import { generateToken } from '../common/authorization';
 
 
-export async function getAll(req: Request, res: Response) {
+export async function getAllSinger(req: Request, res: Response) {
     try {
-
-    } catch (error){
-        
+        const singers = await getAllSingerService()
+        res.status(200).json(singers)
+    } catch (err){
+        res.status(500).json(err)
     }
 }
 
@@ -73,3 +74,4 @@ export async function login(req: Request, res: Response) {
     }
 }
 // create register api and setup jwt
+ 
