@@ -13,6 +13,19 @@ export async function getAllUsersService() {
     return await prisma.user.findMany()
 }
 
+export async function getAllSingerService(){
+    return await prisma.user.findMany({
+        where: {
+            isAdmin: false
+        },
+        select: {
+            user_id: true,
+            name: true,
+            image_path: true,
+        }
+    })
+}
+
 export async function createUserService(user: CreateUserDto) {
     try {
         return await prisma.user.create({

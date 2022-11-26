@@ -1,15 +1,16 @@
-import { createUserService } from './user.service';
+import { createUserService, getAllSingerService } from './user.service';
 import { Request, Response } from 'express';
 import { CreateUserDto } from './user.dto';
 import {plainToClass} from 'class-transformer';
 import { validate } from 'class-validator';
 
 
-export async function getAll(req: Request, res: Response) {
+export async function getAllSinger(req: Request, res: Response) {
     try {
-
+        const singers = await getAllSingerService()
+        res.status(200).json(singers)
     } catch (err){
-        
+        res.status(500).json(err)
     }
 }
 
