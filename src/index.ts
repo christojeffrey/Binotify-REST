@@ -2,6 +2,7 @@ import express from 'express'
 import {Request, Response} from 'express'
 const port = process.env.PORT || 3000;
 import UserRouter from './user/user.route'
+import SongRouter from './song/song.route'
 let morgan = require('morgan')
 
 const app = express()
@@ -14,6 +15,7 @@ app.get('/', async (req:Request, res: Response) => {
 })
 
 app.use('/', UserRouter)
+app.use('/', SongRouter)
 
 app.listen(port, () => {
     console.log(`Binotify REST app listening at http://localhost:${port}`)

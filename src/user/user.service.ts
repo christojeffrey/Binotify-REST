@@ -1,9 +1,9 @@
 import prisma from '../../prisma/prisma-client';
 import { registerDto, loginDto } from './user.dto';
 
-export async function getUserById(id: number) {
+export async function getUserByIdService(id: number) {
     try{
-        return await prisma.user.findUnique({
+        return prisma.user.findUnique({
             where: {
                 user_id : id
             }
@@ -14,9 +14,9 @@ export async function getUserById(id: number) {
     
 }
 
-export async function getUserByUsername(username: string) {
+export async function getUserByUsernameService(username: string) {
     try{
-        return await prisma.user.findUnique({
+        return prisma.user.findUnique({
             where: {
                 username: username
             }
@@ -27,9 +27,9 @@ export async function getUserByUsername(username: string) {
     
 }
 
-export async function getUserByUsernameEmail(username: string, email: string) {
+export async function getUserByUsernameEmailService(username: string, email: string) {
     try{
-        return await prisma.user.findFirst({
+        return prisma.user.findFirst({
             where: {
                 OR: [
                     {
@@ -49,13 +49,13 @@ export async function getUserByUsernameEmail(username: string, email: string) {
 
 
 
-export async function getAllUsersService() {
-    return await prisma.user.findMany()
-}
+// export async function getAllUsersService() {
+//     return await prisma.user.findMany()
+// }
 
 export async function createUserService(register_body: registerDto) {
     try {
-       return await prisma.user.create({
+       return prisma.user.create({
             data: register_body
         })
     } catch (error) {

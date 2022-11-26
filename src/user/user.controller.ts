@@ -1,15 +1,15 @@
-import { createUserService,  getUserByUsername, getUserByUsernameEmail } from './user.service';
+import { createUserService,  getUserByUsernameService, getUserByUsernameEmailService } from './user.service';
 import { Request, Response } from 'express';
 import { registerDto, loginDto } from './user.dto';
 import { plainToClass } from 'class-transformer';
 import { validate } from 'class-validator';
-import { generateToken } from '../common/token';
+import { generateToken } from '../common/authorization';
 
 
 export async function getAll(req: Request, res: Response) {
     try {
 
-    } catch (err){
+    } catch (error){
         
     }
 }
@@ -20,10 +20,11 @@ export async function register(req: Request, res: Response) {
     }).then(errors => {
         if (errors.length > 0) {
             res.status(400).send(errors)
+            return
         }
     }) 
     try {
-        const user_with_same_username_email = await getUserByUsernameEmail(register_body.username, register_body.email)
+        const user_with_same_username_email = await getUserByUsernameEmailService(register_body.username, register_body.email)
 
         if (user_with_same_username_email) {
             res.status(400).send("Username or email already exists")
@@ -39,8 +40,8 @@ export async function register(req: Request, res: Response) {
             res.status(200).send({token: token})
         }
 
-    } catch (err) {
-        res.status(500).send(err)
+    } catch (error) {
+        res.status(500).send(error)
     }
 }
 
@@ -50,10 +51,11 @@ export async function login(req: Request, res: Response) {
     }).then(errors => {
         if (errors.length > 0) {
             res.status(400).send(errors)
+            return
         }
     }) 
     try {
-        const user = await getUserByUsername(login_body.username)
+        const user = await getUserByUsernameService(login_body.username)
         if (user && user.password == login_body.password) {
             const token_payload = {
                 user_id: user.user_id,
@@ -66,8 +68,8 @@ export async function login(req: Request, res: Response) {
             res.status(400).send("Invalid username or password")
         }
         
-    } catch (err) {
-        res.status(500).send(err)
+    } catch (error) {
+        res.status(500).send(error)
     }
 }
 // create register api and setup jwt
