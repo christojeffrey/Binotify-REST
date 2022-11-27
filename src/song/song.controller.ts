@@ -158,22 +158,23 @@ export async function getSubscribedSongs(req:Request,res:Response){
     const creator_ids = Array.from(body.creator_ids);
 
     
+    let songs: Array<any> = [];
     try {
-        let songs: Array<any> = [];
         await Promise.all(creator_ids.map(async (id) => {
             let xmlrespond = await sendXMLRequestCheckSubscription(id, body.subscriber_id, process.env.SOAP_API_KEY);
             ({ status, message } = xmlRespondToStatusAndMessage(xmlrespond));
             if(status !== "ACCEPTED"){
-                res.status(401).send("Not Subscribed");
-                return
+                throw new Error("Not subscribed to all creators");
             }
             const curr_songs = await getSongBySingerIdService(id);
             songs.push(...curr_songs);
         }));
-        res.status(200).send({songs: songs});
-    } catch (error){
-        res.status(500).send(error);
+    } catch (error: any) {
+        res.status(500).send(error.message);
+        return
     }
+    res.status(200).send({songs: songs});
+    return
 
     
 
