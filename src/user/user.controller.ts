@@ -6,7 +6,7 @@ import { validate } from "class-validator";
 import { generateToken, verifyToken } from "../common/authorization";
 import { errorFormatter } from "../common/errorFormatter";
 
-export async function isAdmin(req: Request, res: Response) {
+export async function userInfo(req: Request, res: Response) {
   // check auth in header
   const token = req.headers.authorization;
   if (!token) {
@@ -22,7 +22,7 @@ export async function isAdmin(req: Request, res: Response) {
     return;
   }
 
-  res.status(200).send({ isAdmin: user.is_admin });
+  res.status(200).send({ isAdmin: user.is_admin, username: user.username });
 }
 
 export async function getAllSinger(_: Request, res: Response) {
