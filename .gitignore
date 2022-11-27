@@ -1,4 +1,6 @@
 node_modules
 # Keep environment variables out of version control
 .env
-uploads/*
+
+# dont ignore upload, now the file path in database can't be accessed. we're sharing database here
+# uploads/*

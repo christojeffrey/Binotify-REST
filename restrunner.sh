@@ -1,7 +1,7 @@
 # enable this when a new package is installed
-# npm install
+npm install
 
 # enable this when a the database is updated 
-# npx prisma migrate dev --name init
+# npx prisma migrate dev --name force_reset_26_nov
 npx prisma generate
 npm run dev

@@ -1,22 +1,28 @@
-import express from 'express'
-import {Request, Response} from 'express'
+import express from "express";
+import { Request, Response } from "express";
 const port = process.env.PORT || 3000;
-import UserRouter from './user/user.route'
-import SongRouter from './song/song.route'
-let morgan = require('morgan')
+import UserRouter from "./user/user.route";
+import SongRouter from "./song/song.route";
+import SubscriptionRouter from "./subscription/subscription.route";
+let morgan = require("morgan");
 
-const app = express()
+// setupe express app
+const app = express();
+app.use(express.json());
 
-app.use(express.json())
-app.use(morgan('combined'))
+// log requests
+app.use(morgan("combined"));
 
-app.get('/', async (req:Request, res: Response) => {
-    res.json({ message: 'Hello World' })
-})
+// setup routes
+app.get("/", async (req: Request, res: Response) => {
+  res.json({ message: "Hello World" });
+});
 
-app.use('/', UserRouter)
-app.use('/', SongRouter)
+app.use("/", UserRouter);
+app.use("/", SongRouter);
+app.use("/", SubscriptionRouter);
 
+// start server
 app.listen(port, () => {
-    console.log(`Binotify REST app listening at http://localhost:${port}`)
-  });
+  console.log(`Binotify REST app listening at http://localhost:${port}`);
+});
