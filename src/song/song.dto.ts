@@ -22,3 +22,13 @@ export class updateSongDto {
     @Expose()
     audio_path: string;
 }
+
+export class getSubscribedSongsRequestDto{
+    @IsDefined()
+    @Expose()
+    subscriber_id: number;
+
+    @IsDefined()
+    @Expose()
+    creator_ids: Int16Array;
+}
