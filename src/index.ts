@@ -10,6 +10,10 @@ let morgan = require("morgan");
 const app = express();
 app.use(express.json());
 
+// enable cors
+let cors = require("cors");
+app.use(cors());
+
 // log requests
 app.use(morgan("combined"));
 
