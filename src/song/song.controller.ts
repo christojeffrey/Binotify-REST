@@ -11,9 +11,41 @@ import { MulterRequest } from '../common/fileUpload';
 import { createSongService, deleteSongService, getSongBySingerIdService, updateSongService } from './song.service';
 import { errorFormatter } from '../common/errorFormatter';
 
+const path = require("path");
 const fetch = require("node-fetch");
 let builder = require("xmlbuilder");
 var parseString = require("xml2js").parseString;
+
+export async function getSongAudioFile(req: Request, res: Response) {
+    const token = req.headers.authorization
+
+    if (!token) {
+        res.status(401).send("Unauthorized")
+        return
+    }
+
+    const verified_user = verifyToken(token)
+    if (!verified_user) {
+        res.status(401).send("Unauthorized")
+        return
+    }
+
+    if (verified_user.is_admin) {
+        res.status(401).send("Unauthorized, only singer can access")
+        return
+    }
+
+    const audio_path = req.params.audio_path;
+    if (!audio_path) {
+        res.status(400).send("Please provide audio path")
+        return
+    }
+    try {
+        res.sendFile(path.join(__dirname + "/../../uploads/" + audio_path));
+    } catch (error) {
+        res.status(401).send(error)
+    }
+}
 
 export async function createSong(req: Request, res: Response) {
     const token = req.headers.authorization
@@ -29,8 +61,13 @@ export async function createSong(req: Request, res: Response) {
         return
     }
 
-    const audio_file_path = (req as MulterRequest).file.path
+    if (verified_user.is_admin) {
+        res.status(401).send("Unauthorized, only singer can access")
+        return
+    }
 
+    const audio_file_path = (req as MulterRequest).file.filename
+    console.log((req as MulterRequest).file)
     const create_song_body = {
         title: req.body.title,
         audio_path: audio_file_path,
@@ -65,6 +102,11 @@ export async function getSongBySingerId(req: Request, res: Response) {
         return
     }
 
+    if (verified_user.is_admin) {
+        res.status(401).send("Unauthorized, only singer can access")
+        return
+    }
+
     try {
         const songs = await getSongBySingerIdService(verified_user.user_id)
         res.status(200).send({songs: songs})
@@ -84,6 +126,11 @@ export async function deleteSong(req: Request, res: Response) {
     const verified_user = verifyToken(token)
     if (!verified_user) {
         res.status(401).send("Unauthorized")
+        return
+    }
+
+    if (verified_user.is_admin) {
+        res.status(401).send("Unauthorized, only singer can access")
         return
     }
 
@@ -112,6 +159,11 @@ export async function updateSong(req: Request, res: Response) {
     const verified_user = verifyToken(token)
     if (!verified_user) {
         res.status(401).send("Unauthorized")
+        return
+    }
+
+    if (verified_user.is_admin) {
+        res.status(401).send("Unauthorized, only singer can access")
         return
     }
 
