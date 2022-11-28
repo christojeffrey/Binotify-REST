@@ -21,8 +21,8 @@ export async function userInfo(req: Request, res: Response) {
     res.status(401).send("Unauthorized");
     return;
   }
-
-  res.status(200).send({ isAdmin: user.is_admin, username: user.username });
+  const user_info = await getUserByUsernameService(user.username);
+  res.status(200).send(user_info);
 }
 
 export async function getAllSinger(_: Request, res: Response) {
