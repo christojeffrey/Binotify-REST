@@ -5,6 +5,7 @@ import { plainToClass } from "class-transformer";
 import { validate } from "class-validator";
 import { generateToken, verifyToken } from "../common/authorization";
 import { errorFormatter } from "../common/errorFormatter";
+import { hash } from "../common/hash";
 
 export async function userInfo(req: Request, res: Response) {
   // check auth in header
@@ -48,6 +49,7 @@ export async function register(req: Request, res: Response) {
     if (user_with_same_username_email) {
       res.status(400).send("Username or email already exists");
     } else {
+      register_body.password = hash(register_body.password);
       const newUser = await createUserService(register_body);
       const token_payload = {
         user_id: newUser.user_id,
@@ -74,7 +76,7 @@ export async function login(req: Request, res: Response) {
   try {
     const user = await getUserByUsernameService(login_body.username);
     console.log("user", user);
-    if (user && user.password == login_body.password) {
+    if (user && user.password == hash(login_body.password)) {
       const token_payload = {
         user_id: user.user_id,
         username: user.username,
