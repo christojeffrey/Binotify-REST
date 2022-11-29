@@ -1,6 +1,6 @@
 import express from "express";
 import { Request, Response } from "express";
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 8081;
 import UserRouter from "./user/user.route";
 import SongRouter from "./song/song.route";
 import SubscriptionRouter from "./subscription/subscription.route";
