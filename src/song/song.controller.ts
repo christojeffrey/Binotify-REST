@@ -172,7 +172,7 @@ export async function updateSong(req: Request, res: Response) {
         return
     }
 
-    const audio_file_path = (req as MulterRequest).file?.path
+    const audio_file_path = (req as MulterRequest).file?.filename
 
     const update_song_body = {
         title: req.body.title,
