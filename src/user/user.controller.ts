@@ -11,15 +11,14 @@ export async function userInfo(req: Request, res: Response) {
   // check auth in header
   const token = req.headers.authorization;
   if (!token) {
-    res.status(401).send("Unauthorized");
+    res.status(401).send(errorFormatter("Unauthorized"));
     return;
   }
   // verify token
   let user;
-  try {
-    user = verifyToken(token);
-  } catch (error) {
-    res.status(401).send("Unauthorized");
+  user = verifyToken(token);
+  if (!user) {
+    res.status(401).send(errorFormatter("Unauthorized"));
     return;
   }
 
@@ -47,7 +46,7 @@ export async function register(req: Request, res: Response) {
     const user_with_same_username_email = await getUserByUsernameEmailService(register_body.username, register_body.email);
 
     if (user_with_same_username_email) {
-      res.status(400).send("Username or email already exists");
+      res.status(400).send(errorFormatter("Username or email already exists"));
     } else {
       register_body.password = hash(register_body.password);
       const newUser = await createUserService(register_body);
