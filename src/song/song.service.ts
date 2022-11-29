@@ -37,7 +37,7 @@ export async function createSongService(create_song_body: createSongDto) {
 
 export async function deleteSongService(id: number) {
     try {
-        return prisma.song.findUnique({
+        return prisma.song.delete({
             where: {
                 song_id: id
             }
