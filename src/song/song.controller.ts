@@ -10,6 +10,7 @@ import { MulterRequest } from "../common/fileUpload";
 
 import { createSongService, deleteSongService, getSongBySingerIdService, updateSongService } from "./song.service";
 import { errorFormatter } from "../common/errorFormatter";
+import { getUserByUsernameService } from "../user/user.service";
 
 const path = require("path");
 const fetch = require("node-fetch");
@@ -62,6 +63,14 @@ export async function createSong(req: Request, res: Response) {
     return;
   }
 
+  const user_info = await getUserByUsernameService(verified_user.username);
+
+  // if token valid, but username doesn't exist
+  if (!user_info) {
+    res.status(400).send(errorFormatter("user not found"));
+    return;
+  }
+
   if (verified_user.is_admin) {
     res.status(401).send(errorFormatter("Unauthorized, only singer can access"));
     return;
@@ -108,6 +117,13 @@ export async function getSongBySingerId(req: Request, res: Response) {
     return;
   }
 
+  // if token valid, but username doesn't exist
+  const user_info = await getUserByUsernameService(verified_user.username);
+  if (!user_info) {
+    res.status(400).send(errorFormatter("user not found"));
+    return;
+  }
+
   if (verified_user.is_admin) {
     res.status(401).send(errorFormatter("Unauthorized, only singer can access"));
     return;
@@ -132,6 +148,12 @@ export async function deleteSong(req: Request, res: Response) {
   const verified_user = verifyToken(token);
   if (!verified_user) {
     res.status(401).send(errorFormatter("Unauthorized"));
+    return;
+  }
+  // if token valid, but username doesn't exist
+  const user_info = await getUserByUsernameService(verified_user.username);
+  if (!user_info) {
+    res.status(400).send(errorFormatter("user not found"));
     return;
   }
 
@@ -165,6 +187,13 @@ export async function updateSong(req: Request, res: Response) {
   const verified_user = verifyToken(token);
   if (!verified_user) {
     res.status(401).send(errorFormatter("Unauthorized"));
+    return;
+  }
+
+  // if token valid, but username doesn't exist
+  const user_info = await getUserByUsernameService(verified_user.username);
+  if (!user_info) {
+    res.status(400).send(errorFormatter("user not found"));
     return;
   }
 

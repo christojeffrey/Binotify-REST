@@ -22,6 +22,12 @@ export async function userInfo(req: Request, res: Response) {
     return;
   }
   const user_info = await getUserByUsernameService(user.username);
+
+  // if token valid, but username doesn't exist
+  if (!user_info) {
+    res.status(400).send(errorFormatter("user not found"));
+    return;
+  }
   res.status(200).send(user_info);
 }
 
