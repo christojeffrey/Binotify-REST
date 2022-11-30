@@ -28,7 +28,10 @@ export async function userInfo(req: Request, res: Response) {
     res.status(400).send(errorFormatter("user not found"));
     return;
   }
-  res.status(200).send(user_info);
+  // delte rpassword
+  const { password, ...filtered_user_info } = user_info;
+
+  res.status(200).send(filtered_user_info);
 }
 
 export async function getAllSinger(_: Request, res: Response) {
