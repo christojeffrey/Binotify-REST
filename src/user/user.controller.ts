@@ -1,4 +1,4 @@
-import { createUserService, getUserByUsernameService, getUserByUsernameEmailService, getAllSingerService } from "./user.service";
+import { createUserService, getUserByUsernameService, getUserByUsernameEmailService, getAllSingerService, getUserByIdService } from "./user.service";
 import { Request, Response } from "express";
 import { registerDto, loginDto } from "./user.dto";
 import { plainToClass } from "class-transformer";
@@ -21,9 +21,9 @@ export async function userInfo(req: Request, res: Response) {
     res.status(401).send(errorFormatter("Unauthorized"));
     return;
   }
-  const user_info = await getUserByUsernameService(user.username);
 
   // if token valid, but username doesn't exist
+  const user_info = await getUserByIdService(user.user_id);
   if (!user_info) {
     res.status(400).send(errorFormatter("user not found"));
     return;
@@ -37,7 +37,7 @@ export async function userInfo(req: Request, res: Response) {
 export async function getAllSinger(_: Request, res: Response) {
   try {
     const singers = await getAllSingerService();
-    res.status(200).json(singers);
+    res.status(200).json({ singers });
   } catch (err) {
     res.status(500).json(errorFormatter(err));
   }

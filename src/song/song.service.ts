@@ -27,8 +27,14 @@ export async function getSongBySingerIdService(singer_id: number) {
 
 export async function createSongService(create_song_body: createSongDto) {
   try {
+    console.log("testing", create_song_body);
+
     return prisma.song.create({
-      data: create_song_body,
+      data: {
+        title: create_song_body.title,
+        audio_path: create_song_body.audio_path,
+        singer_id: 2,
+      },
     });
   } catch (error) {
     throw new Error("Error creating user");

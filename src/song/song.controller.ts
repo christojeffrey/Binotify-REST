@@ -10,7 +10,7 @@ import { MulterRequest } from "../common/fileUpload";
 
 import { createSongService, deleteSongService, getSongBySingerIdService, updateSongService } from "./song.service";
 import { errorFormatter } from "../common/errorFormatter";
-import { getUserByUsernameService } from "../user/user.service";
+import { getUserByIdService, getUserByUsernameService } from "../user/user.service";
 
 const path = require("path");
 const fetch = require("node-fetch");
@@ -63,26 +63,26 @@ export async function createSong(req: Request, res: Response) {
     return;
   }
 
-  const user_info = await getUserByUsernameService(verified_user.username);
-
+  const user_info = await getUserByIdService(verified_user.user_id);
   // if token valid, but username doesn't exist
   if (!user_info) {
     res.status(400).send(errorFormatter("user not found"));
     return;
   }
+  console.log("userinfo", user_info);
 
   if (verified_user.is_admin) {
     res.status(401).send(errorFormatter("Unauthorized, only singer can access"));
     return;
   }
 
+  console.log("create song");
   if (!(req as MulterRequest).file) {
     res.status(400).send(errorFormatter("Please provide audio file"));
     return;
   }
 
   const audio_file_path = (req as MulterRequest).file.filename;
-  console.log((req as MulterRequest).file);
 
   const create_song_body = {
     title: req.body.title,
@@ -90,7 +90,7 @@ export async function createSong(req: Request, res: Response) {
     singer_id: verified_user.user_id,
   };
 
-  validate(create_song_body, { skipMissingProperties: false }).then((errors) => {
+  validate(create_song_body, { skipMissingProperties: false }).then((errors: any) => {
     if (errors.length > 0) {
       res.status(400).send(errorFormatter(errors));
     }
@@ -99,6 +99,7 @@ export async function createSong(req: Request, res: Response) {
     await createSongService(create_song_body);
     res.status(200).send({ message: "created" });
   } catch (error) {
+    console.log("error", error);
     res.status(500).send(errorFormatter(error));
   }
 }
@@ -118,7 +119,7 @@ export async function getSongBySingerId(req: Request, res: Response) {
   }
 
   // if token valid, but username doesn't exist
-  const user_info = await getUserByUsernameService(verified_user.username);
+  const user_info = await getUserByIdService(verified_user.user_id);
   if (!user_info) {
     res.status(400).send(errorFormatter("user not found"));
     return;
@@ -151,7 +152,7 @@ export async function deleteSong(req: Request, res: Response) {
     return;
   }
   // if token valid, but username doesn't exist
-  const user_info = await getUserByUsernameService(verified_user.username);
+  const user_info = await getUserByIdService(verified_user.user_id);
   if (!user_info) {
     res.status(400).send(errorFormatter("user not found"));
     return;
@@ -191,7 +192,7 @@ export async function updateSong(req: Request, res: Response) {
   }
 
   // if token valid, but username doesn't exist
-  const user_info = await getUserByUsernameService(verified_user.username);
+  const user_info = await getUserByIdService(verified_user.user_id);
   if (!user_info) {
     res.status(400).send(errorFormatter("user not found"));
     return;

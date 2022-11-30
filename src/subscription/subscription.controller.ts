@@ -3,7 +3,7 @@ import { validate } from "class-validator";
 import { Request, Response } from "express";
 import { verifyToken } from "../common/authorization";
 import { errorFormatter } from "../common/errorFormatter";
-import { getUserByUsernameService } from "../user/user.service";
+import { getUserByIdService, getUserByUsernameService } from "../user/user.service";
 import { updateSubscriptionDto } from "./subscription.dto";
 const fetch = require("node-fetch");
 let builder = require("xmlbuilder");
@@ -27,7 +27,7 @@ export async function updateSubscription(req: Request, res: Response) {
   }
 
   // if token valid, but username doesn't exist
-  const user_info = await getUserByUsernameService(user.username);
+  const user_info = await getUserByIdService(user.user_id);
   if (!user_info) {
     res.status(400).send(errorFormatter("user not found"));
     return;
@@ -84,7 +84,7 @@ export async function getAllSubscriptionRequests(req: Request, res: Response) {
   }
 
   // if token valid, but username doesn't exist
-  const user_info = await getUserByUsernameService(user.username);
+  const user_info = await getUserByIdService(user.user_id);
   if (!user_info) {
     res.status(400).send(errorFormatter("user not found"));
     return;
