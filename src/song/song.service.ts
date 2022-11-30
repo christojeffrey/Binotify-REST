@@ -36,6 +36,7 @@ export async function createSongService(create_song_body: createSongDto) {
 }
 
 export async function deleteSongService(id: number) {
+<<<<<<< HEAD
   try {
     return prisma.song.delete({
       where: {
@@ -45,6 +46,17 @@ export async function deleteSongService(id: number) {
   } catch (error) {
     throw new Error("Error deleting song");
   }
+=======
+    try {
+        return prisma.song.delete({
+            where: {
+                song_id: id
+            }
+        })
+    } catch (error) {
+        throw new Error("Error deleting song")
+    }
+>>>>>>> eda2cc6cc2bf9f0fce35184c938104e5c852960e
 }
 
 export async function updateSongService(id: number, update_song_body: updateSongDto) {
