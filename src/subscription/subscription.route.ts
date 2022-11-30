@@ -4,7 +4,7 @@ import { updateSubscription, getAllSubscriptionRequests } from "./subscription.c
 const SubscriptionRouter = express.Router();
 
 // subcription/:id
-UserRouter.patch("/subscription/:creator_id", updateSubscription);
+UserRouter.patch("/subscription/:creator_id/:subscriber_id", updateSubscription);
 UserRouter.get("/subscription/getAllSubscriptionRequests", getAllSubscriptionRequests);
 
 export default SubscriptionRouter;

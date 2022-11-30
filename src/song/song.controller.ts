@@ -86,7 +86,6 @@ export async function createSong(req: Request, res: Response) {
       res.status(400).send(errorFormatter(errors));
     }
   });
-  console.log("testing4");
   try {
     await createSongService(create_song_body);
     res.status(200).send({ message: "created" });
@@ -204,6 +203,7 @@ export async function updateSong(req: Request, res: Response) {
 
 export async function getSubscribedSongs(req: Request, res: Response) {
   const body = plainToClass(getSubscribedSongsRequestDto, req.body);
+
   validate(body, { skipMissingProperties: false }).then((errors: any) => {
     if (errors.length > 0) {
       res.status(400).send(errorFormatter(errors));
@@ -221,7 +221,7 @@ export async function getSubscribedSongs(req: Request, res: Response) {
         let xmlrespond = await sendXMLRequestCheckSubscription(id, body.subscriber_id, process.env.SOAP_API_KEY);
         ({ status } = xmlRespondToStatusAndMessage(xmlrespond));
         if (status !== "ACCEPTED") {
-          throw new Error("Not subscribed to all creators");
+          throw new Error("Not subscribed to some of the creator(s) listed");
         }
         const curr_songs = await getSongBySingerIdService(id);
         songs.push(...curr_songs);
@@ -258,7 +258,8 @@ export async function sendXMLRequestCheckSubscription(creator_id: any, user_id: 
 
   // print xml
   // console.log("xml", xml);
-  let SOAP_URL = "http://localhost:8080/api/binotify";
+  let SOAP_URL = process.env.SOAP_URL;
+  console.log("soap url", SOAP_URL);
 
   let data = await fetch(SOAP_URL || "", {
     method: "POST",
@@ -268,11 +269,11 @@ export async function sendXMLRequestCheckSubscription(creator_id: any, user_id: 
   })
     .then((response: any) => response.text())
     .then((result: any) => {
-      // console.log("result", result);
+      console.log("result", result);
       return result;
     })
     .catch((error: any) => {
-      // console.log("error", error);
+      console.log("error", error);
       return error;
     });
   return data;
@@ -283,6 +284,7 @@ function xmlRespondToStatusAndMessage(xmlrespond: any) {
   let status;
   let message;
   parseString(xmlrespond, function (err: any, result: any) {
+    console.log("result", result);
     // console.log("status", result["S:Envelope"]["S:Body"][0]["ns2:updateSubscriptionResponse"][0]["return"][0]["status"][0]);
     status = result["S:Envelope"]["S:Body"][0]["ns2:checkSubscriptionResponse"][0]["return"][0]["status"][0];
     // get message if message exists

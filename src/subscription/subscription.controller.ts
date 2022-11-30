@@ -45,7 +45,8 @@ export async function updateSubscription(req: Request, res: Response) {
   let status;
   let message;
   const creator_id = req.params.creator_id;
-  let xmlrespond = await sendXMLRequestUpdateSubscription(creator_id, user["user_id"], newSubscriptionStatus);
+  const subscriber_id = req.params.subscriber_id;
+  let xmlrespond = await sendXMLRequestUpdateSubscription(creator_id, subscriber_id, newSubscriptionStatus);
   ({ status, message } = xmlRespondToStatusAndMessage(xmlrespond));
 
   if (status == "error") {
@@ -118,7 +119,8 @@ export async function sendXMLRequestUpdateSubscription(creator_id: any, user_id:
 
   // print xml
   console.log("xml", xml);
-  let SOAP_URL = "http://binotify_soap:8080/api/binotify";
+  let SOAP_URL = process.env.SOAP_URL;
+  console.log("SOAP_URL", SOAP_URL);
 
   let data = await fetch(SOAP_URL || "", {
     method: "POST",
@@ -157,7 +159,7 @@ export async function sendXMLRequestGetAllSubscriptionRequest() {
     .end({ pretty: true });
 
   // print xml
-  let SOAP_URL = "http://binotify_soap:8080/api/binotify";
+  let SOAP_URL = process.env.SOAP_URL;
 
   let data = await fetch(SOAP_URL || "", {
     method: "POST",
@@ -179,6 +181,7 @@ function xmlRespondToStatusAndMessage(xmlrespond: any) {
   // unpack xmlrespond, get status and message
   let status;
   let message;
+  console.log("xml respond", xmlrespond);
   parseString(xmlrespond, function (err: any, result: any) {
     // console.log("status", result["S:Envelope"]["S:Body"][0]["ns2:updateSubscriptionResponse"][0]["return"][0]["status"][0]);
     status = result["S:Envelope"]["S:Body"][0]["ns2:updateSubscriptionResponse"][0]["return"][0]["status"][0];
@@ -191,18 +194,22 @@ function xmlRespondToStatusAndMessage(xmlrespond: any) {
 }
 
 function xmlRespondToSubscriptions(xmlrespond: any) {
-  // unpack xmlrespond, get status and message
+  // unpack xmlrespond, get subscriptions. given that status is not error
   let subscriptions: any = [];
   let creator_id;
   let subscriber_id;
   let status;
-  parseString(xmlrespond, function (err: any, result: any) {
-    for (var subscription of result["S:Envelope"]["S:Body"][0]["ns2:getAllSubscriptionRequestsResponse"]["0"]["return"]) {
-      creator_id = subscription["creatorId"][0];
-      subscriber_id = subscription["subscriberId"][0];
-      status = subscription["status"][0];
-      subscriptions.push({ creator_id: creator_id, subscriber_id: subscriber_id, status: status });
-    }
-  });
+  try {
+    parseString(xmlrespond, function (err: any, result: any) {
+      for (var subscription of result["S:Envelope"]["S:Body"][0]["ns2:getAllSubscriptionRequestsResponse"]["0"]["return"]) {
+        creator_id = subscription["creatorId"][0];
+        subscriber_id = subscription["subscriberId"][0];
+        status = subscription["status"][0];
+        subscriptions.push({ creator_id: creator_id, subscriber_id: subscriber_id, status: status });
+      }
+    });
+  } catch {
+    // happens when respond is empty, and there is no pending subscription
+  }
   return { subscriptions: subscriptions };
 }
