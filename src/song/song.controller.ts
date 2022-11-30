@@ -17,23 +17,24 @@ let builder = require("xmlbuilder");
 var parseString = require("xml2js").parseString;
 
 export async function getSongAudioFile(req: Request, res: Response) {
-  const token = req.headers.authorization;
+  // remove this because item shouldn't be able to be taken without any auth. because we should be able to access it from just browser getter. as far as im concerned, this applies in the industry too. take any file (pdf for example, even the one that's considered confidential like a ticket). you can pass the url and someone else can access it.
+  //   const token = req.headers.authorization;
 
-  if (!token) {
-    res.status(401).send(errorFormatter("Unauthorized"));
-    return;
-  }
+  //   if (!token) {
+  //     res.status(401).send(errorFormatter("Unauthorized"));
+  //     return;
+  //   }
 
-  const verified_user = verifyToken(token);
-  if (!verified_user) {
-    res.status(401).send(errorFormatter("Unauthorized"));
-    return;
-  }
+  //   const verified_user = verifyToken(token);
+  //   if (!verified_user) {
+  //     res.status(401).send(errorFormatter("Unauthorized"));
+  //     return;
+  //   }
 
-  if (verified_user.is_admin) {
-    res.status(401).send(errorFormatter("Unauthorized, only singer can access"));
-    return;
-  }
+  //   if (verified_user.is_admin) {
+  //     res.status(401).send(errorFormatter("Unauthorized, only singer can access"));
+  //     return;
+  //   }
 
   const audio_path = req.params.audio_path;
   if (!audio_path) {
@@ -66,8 +67,14 @@ export async function createSong(req: Request, res: Response) {
     return;
   }
 
+  if (!(req as MulterRequest).file) {
+    res.status(400).send(errorFormatter("Please provide audio file"));
+    return;
+  }
+
   const audio_file_path = (req as MulterRequest).file.filename;
   console.log((req as MulterRequest).file);
+
   const create_song_body = {
     title: req.body.title,
     audio_path: audio_file_path,
@@ -76,9 +83,10 @@ export async function createSong(req: Request, res: Response) {
 
   validate(create_song_body, { skipMissingProperties: false }).then((errors) => {
     if (errors.length > 0) {
-      res.status(400).send(errorFormatter(erros));
+      res.status(400).send(errorFormatter(errors));
     }
   });
+  console.log("testing4");
   try {
     await createSongService(create_song_body);
     res.status(200).send({ message: "created" });
@@ -203,7 +211,6 @@ export async function getSubscribedSongs(req: Request, res: Response) {
     }
   });
   let status;
-  let message;
 
   const creator_ids = Array.from(body.creator_ids);
 
@@ -212,7 +219,7 @@ export async function getSubscribedSongs(req: Request, res: Response) {
     await Promise.all(
       creator_ids.map(async (id) => {
         let xmlrespond = await sendXMLRequestCheckSubscription(id, body.subscriber_id, process.env.SOAP_API_KEY);
-        ({ status, message } = xmlRespondToStatusAndMessage(xmlrespond));
+        ({ status } = xmlRespondToStatusAndMessage(xmlrespond));
         if (status !== "ACCEPTED") {
           throw new Error("Not subscribed to all creators");
         }
