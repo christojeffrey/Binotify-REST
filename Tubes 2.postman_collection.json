@@ -1,0 +1,684 @@
+{
+	"info": {
+		"_postman_id": "b51474e3-5d51-4fbb-97ca-59b83427b30c",
+		"name": "Tubes 2",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "24395403"
+	},
+	"item": [
+		{
+			"name": "soap",
+			"item": [
+				{
+					"name": "New Subscription",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "text/xml",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "<Envelope xmlns=\"http://schemas.xmlsoap.org/soap/envelope/\">\r\n    <Body>\r\n        <newSubscription xmlns=\"http://services.binotify/\">\r\n            <arg0 xmlns=\"\">2</arg0>\r\n            <arg1 xmlns=\"\">2</arg1>\r\n            <arg2 xmlns=\"\">x1NbJ4r1e1FAyFNUColSeLG1DhXL6eUfZfDHp93/TWco1YdmDJ+U31Z1S3lLlvYBtZes1nIMwJCQ0bhTaYXkcvdlY4XJjICbedsY3eGGtWXLnZW6/VTP46kpbDQGI/EnJsTIewV8jUpFkIyR/1YD0g==</arg2>\r\n        </newSubscription>\r\n    </Body>\r\n</Envelope>",
+							"options": {
+								"raw": {
+									"language": "xml"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{soapbaseurl}}/api/binotify",
+							"host": [
+								"{{soapbaseurl}}"
+							],
+							"path": [
+								"api",
+								"binotify"
+							]
+						},
+						"description": "arg0 = creator_id\n\narg1 = subscription_id\n\nresponse:\n\n``` xml\n                created\n\n```\n\nresponsenya gabisa di paste anjer. ilang. contoh responsenya aku masukin comment"
+					},
+					"response": []
+				},
+				{
+					"name": "Update Subscription Request",
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {
+							"content-type": true
+						}
+					},
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "text/xml",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "<Envelope xmlns=\"http://schemas.xmlsoap.org/soap/envelope/\">\r\n    <Body>\r\n        <updateSubscription xmlns=\"http://services.binotify/\">\r\n            <arg0 xmlns=\"\">2</arg0>\r\n            <arg1 xmlns=\"\">2</arg1>\r\n            <arg2 xmlns=\"\">ACCEPTED</arg2>\r\n            <arg3 xmlns=\"\">x1NbJ4r1e1FAyFNUColSeLG1DhXL6eUfZfDHp93/TWco1YdmDJ+U31Z1S3lLlvYBtZes1nIMwJCQ0bhTaYXkcvdlY4XJjICbedsY3eGGtWXLnZW6/VTP46kpbDQGI/EnJsTIewV8jUpFkIyR/1YD0g==</arg3>\r\n        </updateSubscription>\r\n    </Body>\r\n</Envelope>",
+							"options": {
+								"raw": {
+									"language": "xml"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{soapbaseurl}}/api/binotify",
+							"host": [
+								"{{soapbaseurl}}"
+							],
+							"path": [
+								"api",
+								"binotify"
+							]
+						},
+						"description": "arg0 = creator_id\n\narg1 = subscription_id\n\narg2 = \"approved\" | \"rejected\"\n\nresponse:\n\ncontoh response ada di comment. gabisa dipaste kesini ntah kenapa"
+					},
+					"response": []
+				},
+				{
+					"name": "Check Subscription Request Status",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "text/xml",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "<Envelope xmlns=\"http://schemas.xmlsoap.org/soap/envelope/\">\r\n    <Body>\r\n        <checkSubscription xmlns=\"http://services.binotify/\">\r\n            <arg0 xmlns=\"\">1</arg0>\r\n            <arg1 xmlns=\"\">2</arg1>\r\n            <arg2 xmlns=\"\">x1NbJ4r1e1FAyFNUColSeLG1DhXL6eUfZfDHp93/TWco1YdmDJ+U31Z1S3lLlvYBtZes1nIMwJCQ0bhTaYXkcvdlY4XJjICbedsY3eGGtWXLnZW6/VTP46kpbDQGI/EnJsTIewV8jUpFkIyR/1YD0g==</arg2>\r\n        </checkSubscription>\r\n    </Body>\r\n</Envelope>"
+						},
+						"url": {
+							"raw": "{{soapbaseurl}}/api/binotify",
+							"host": [
+								"{{soapbaseurl}}"
+							],
+							"path": [
+								"api",
+								"binotify"
+							]
+						},
+						"description": "arg0 = creator_id\n\narg1 = subscription_id\n\nresponse:\n\nresponse di tulis di comment, gabisa di copy ntah kenapa\n\ncopas an spek tubes dibawah ini di handle di binotify App. bukan disini\n\nEndpoint ini berguna untuk menghindari adanya potensi kegagalan callback, sehingga Binotify App dapat melakukan revalidasi data secara [polling](https://anuradha.hashnode.dev/short-polling-vs-long-polling-vs-web-sockets). Selain itu endpoint ini bisa dipakai dengan revalidasi seperti biasa (melakukan refresh page list penyanyi premium di Binotify App, misalnya). Disarankan menggunakan strategi [stale-while-revalidate](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Cache-Control#stale-while-revalidate). Endpoint ini juga dipakai untuk memvalidasi request lagu premium yang diminta oleh service REST."
+					},
+					"response": []
+				},
+				{
+					"name": "Get All Subscription Requests",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "text/xml",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "<Envelope xmlns=\"http://schemas.xmlsoap.org/soap/envelope/\">\r\n    <Body>\r\n        <getAllSubscriptionRequests xmlns=\"http://services.binotify/\">\r\n            <arg0 xmlns=\"\">x1NbJ4r1e1FAyFNUColSeLG1DhXL6eUfZfDHp93/TWco1YdmDJ+U31Z1S3lLlvYBtZes1nIMwJCQ0bhTaYXkcvdlY4XJjICbedsY3eGGtWXLnZW6/VTP46kpbDQGI/EnJsTIewV8jUpFkIyR/1YD0g==</arg0>\r\n        </getAllSubscriptionRequests>\r\n    </Body>\r\n</Envelope>"
+						},
+						"url": {
+							"raw": "{{soapbaseurl}}/api/binotify",
+							"host": [
+								"{{soapbaseurl}}"
+							],
+							"path": [
+								"api",
+								"binotify"
+							]
+						},
+						"description": "arg0 = creator_id\n\narg1 = subscription_id\n\nresponse:\n\nresponse di tulis di comment, gabisa di copy ntah kenapa\n\ncopas an spek tubes dibawah ini di handle di binotify App. bukan disini\n\nEndpoint ini berguna untuk menghindari adanya potensi kegagalan callback, sehingga Binotify App dapat melakukan revalidasi data secara [polling](https://anuradha.hashnode.dev/short-polling-vs-long-polling-vs-web-sockets). Selain itu endpoint ini bisa dipakai dengan revalidasi seperti biasa (melakukan refresh page list penyanyi premium di Binotify App, misalnya). Disarankan menggunakan strategi [stale-while-revalidate](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Cache-Control#stale-while-revalidate). Endpoint ini juga dipakai untuk memvalidasi request lagu premium yang diminta oleh service REST."
+					},
+					"response": []
+				},
+				{
+					"name": "Generate API Key",
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {
+							"content-type": true
+						}
+					},
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "text/xml",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "<Envelope xmlns=\"http://schemas.xmlsoap.org/soap/envelope/\">\r\n    <Body>\r\n        <generateApiKey xmlns=\"http://services.binotify/\">\r\n            <arg0 xmlns=\"\">DimasGanteng</arg0>\r\n            <arg1 xmlns=\"\">newSubscription,checkSubscription, getAllSubscriptionRequests, updateSubscription</arg1>\r\n            <arg2 xmlns=\"\">28/11/2050</arg2>\r\n        </generateApiKey>\r\n    </Body>\r\n</Envelope>",
+							"options": {
+								"raw": {
+									"language": "xml"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{soapbaseurl}}/api/binotify",
+							"host": [
+								"{{soapbaseurl}}"
+							],
+							"path": [
+								"api",
+								"binotify"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "wsdl",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "xml"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{soapbaseurl}}/api/binotify?wsdl",
+							"host": [
+								"{{soapbaseurl}}"
+							],
+							"path": [
+								"api",
+								"binotify"
+							],
+							"query": [
+								{
+									"key": "wsdl",
+									"value": null
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"description": "erronya sama semua,\n\ndi bagian status isinya \"error\""
+		},
+		{
+			"name": "rest",
+			"item": [
+				{
+					"name": "Login",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"username\": \"user2\",\r\n    \"password\": \"user2\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{restbaseurl}}/login",
+							"host": [
+								"{{restbaseurl}}"
+							],
+							"path": [
+								"login"
+							]
+						},
+						"description": "response\n\n``` json\n{\n    \"token\": \"jwttoken.token.token\",\n    \"isAdmin\": true | false\n}\n\n```"
+					},
+					"response": []
+				},
+				{
+					"name": "Register",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\":\"user\",\r\n    \"username\":\"user\",\r\n    \"email\":\"user@user.com\",\r\n    \"password\":\"user\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{restbaseurl}}/register",
+							"host": [
+								"{{restbaseurl}}"
+							],
+							"path": [
+								"register"
+							]
+						},
+						"description": "StartFragment\n\nfield nama, username (unik), email (unik), password, dan confirm password.\n\nEndFragment\n\nresponse\n\n``` json\n{\n    token: \"json.web.token\"\n}\n\n```"
+					},
+					"response": []
+				},
+				{
+					"name": "Create Song",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{resttoken}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "file",
+									"type": "file",
+									"src": "/C:/Users/chris/Downloads/Lauv - I Like Me Better [Official Audio].mp3"
+								},
+								{
+									"key": "title",
+									"value": "the other",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{restbaseurl}}/song",
+							"host": [
+								"{{restbaseurl}}"
+							],
+							"path": [
+								"song"
+							]
+						},
+						"description": "response\n\n``` json\n{\n    \"message\": \"created\"\n}\n\n```"
+					},
+					"response": []
+				},
+				{
+					"name": "Read Songs",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{resttoken}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{restbaseurl}}/song",
+							"host": [
+								"{{restbaseurl}}"
+							],
+							"path": [
+								"song"
+							]
+						},
+						"description": "dipake sama binotify premium\n\nresponse:\n\n``` json\n{\n    songs: [\n        {\n            id: 1,\n            judul: \"judul\",\n            \"audio_file\": \"https://contentstorage.com/audiopath.mp3\"\n        }\n    ]\n}\n\n```"
+					},
+					"response": []
+				},
+				{
+					"name": "Update Song",
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{resttoken}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "title",
+									"value": "The Other",
+									"type": "text"
+								},
+								{
+									"key": "file",
+									"type": "file",
+									"src": [],
+									"disabled": true
+								}
+							]
+						},
+						"url": {
+							"raw": "{{restbaseurl}}/song/2",
+							"host": [
+								"{{restbaseurl}}"
+							],
+							"path": [
+								"song",
+								"2"
+							]
+						},
+						"description": "response\n\n``` json\n{\n    \"message\":\"updated\"\n}\n\n```"
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Song",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{resttoken}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{restbaseurl}}/song/1",
+							"host": [
+								"{{restbaseurl}}"
+							],
+							"path": [
+								"song",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Play Song",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{restbaseurl}}/song/1669770409472.mp3",
+							"host": [
+								"{{restbaseurl}}"
+							],
+							"path": [
+								"song",
+								"1669770409472.mp3"
+							]
+						},
+						"description": "response:\n\n``` json\n{\n    singers: [\n        {\n            id: 1,\n            name: \"singer A\",\n            \"image_path\": \"\"\n        }\n    ]\n}\n\n```"
+					},
+					"response": []
+				},
+				{
+					"name": "Get All Singers",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{resttoken}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{restbaseurl}}/singer",
+							"host": [
+								"{{restbaseurl}}"
+							],
+							"path": [
+								"singer"
+							]
+						},
+						"description": "response:\n\n``` json\n{\n    singers: [\n        {\n            id: 1,\n            name: \"singer A\",\n            \"image_path\": \"\"\n        }\n    ]\n}\n\n```"
+					},
+					"response": []
+				},
+				{
+					"name": "Get All Premium Songs from Premium Singers Subscribed by User",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"creator_ids\":[1],\r\n    \"subscriber_id\": 1\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{restbaseurl}}/song/premium",
+							"host": [
+								"{{restbaseurl}}"
+							],
+							"path": [
+								"song",
+								"premium"
+							]
+						},
+						"description": "response\n\n``` json\n{\n    \n}\n\n```"
+					},
+					"response": []
+				},
+				{
+					"name": "Get All Subscription Requests",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{restadmintoken}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{restbaseurl}}/subscription/getAllSubscriptionRequests",
+							"host": [
+								"{{restbaseurl}}"
+							],
+							"path": [
+								"subscription",
+								"getAllSubscriptionRequests"
+							]
+						},
+						"description": "response\n\n``` json\n{\n    \n}\n\n```"
+					},
+					"response": []
+				},
+				{
+					"name": "Update Subscription Request",
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{restadmintoken}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"status\":\"PENDING\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{restbaseurl}}/subscription/:creator_id/:subscriber_id",
+							"host": [
+								"{{restbaseurl}}"
+							],
+							"path": [
+								"subscription",
+								":creator_id",
+								":subscriber_id"
+							],
+							"variable": [
+								{
+									"key": "creator_id",
+									"value": "1"
+								},
+								{
+									"key": "subscriber_id",
+									"value": "2"
+								}
+							]
+						},
+						"description": "update subscriber data. for changing subscriber status from pending\n\nresponse\n\n```\n{\n    id:123\n    status:\"rejected\"\n}\n\n```"
+					},
+					"response": []
+				},
+				{
+					"name": "hello world",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{restbaseurl}}/",
+							"host": [
+								"{{restbaseurl}}"
+							],
+							"path": [
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get user info",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{resttoken}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{restbaseurl}}/userInfo",
+							"host": [
+								"{{restbaseurl}}"
+							],
+							"path": [
+								"userInfo"
+							]
+						},
+						"description": "response\n\n```\n{\n    \"isAdmin\": false\n}\n\n```"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "app",
+			"item": [
+				{
+					"name": "Update Subscription",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"subscriber_id\":\"2\",\r\n    \"creator_id\":\"2\",\r\n    \"status\":\"ACCEPTED\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{appbaseurl}}/api/subscription/updateSubscription.php",
+							"host": [
+								"{{appbaseurl}}"
+							],
+							"path": [
+								"api",
+								"subscription",
+								"updateSubscription.php"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get subscribed",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{appbaseurl}}/api/subscription/getSubscribedSingers.php?subscriber_id=2",
+							"host": [
+								"{{appbaseurl}}"
+							],
+							"path": [
+								"api",
+								"subscription",
+								"getSubscribedSingers.php"
+							],
+							"query": [
+								{
+									"key": "subscriber_id",
+									"value": "2"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "check if app subscription updated. (same as soap)",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{appbaseurl}}/api/subscription/checkSubscription.php",
+							"host": [
+								"{{appbaseurl}}"
+							],
+							"path": [
+								"api",
+								"subscription",
+								"checkSubscription.php"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}
