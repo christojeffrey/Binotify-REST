@@ -33,7 +33,7 @@ export async function createSongService(create_song_body: createSongDto) {
       data: {
         title: create_song_body.title,
         audio_path: create_song_body.audio_path,
-        singer_id: 2,
+        singer_id: create_song_body.singer_id,
       },
     });
   } catch (error) {
